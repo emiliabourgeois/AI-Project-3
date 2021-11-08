@@ -30,12 +30,13 @@ class Node:
 
     def getMarkovBlanket(self):
         blanket = []
-        blanket.append(self.children)
-        blanket.append(self.parents)
+        blanket += self.children
+        blanket += self.parents
         for child in self.children:
-            blanket.append(child.parents)
+            blanket += child.parents
         blanket = removeDupes(blanket)
         return blanket
+
 
 def removeDupes(array):
     runningList = []
