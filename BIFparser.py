@@ -1,6 +1,7 @@
 import Node
-import re
-
+from Graph import Graph
+import array
+import numpy as np
 
 def parseBIF(file):
     f = open(file)
@@ -82,13 +83,16 @@ def parseBIF(file):
                         state = state.replace(',', '')
                         lineList[num] = state
 
-                    # In the CPD dictionary key, the states of the node are stored first. The second tuple is that of the parent values
                     index = 0
                     key = ""
                     for num in range(temp.numParents()):
                         key += lineList[index]
                         index += 1
                     value = lineList[temp.numParents():]
+                    count = 0
+                    for v in value:
+                        value[count] = float(v)
+                        count += 1
                     stateDict[key] = value
 
                 lineCount += 1
@@ -96,4 +100,12 @@ def parseBIF(file):
             temp.setDistribution(stateDict)
         else:
             lineCount += 1
-    return nodesList
+    g = Graph(len(nodesList))
+    for n in nodesList:
+        for parent in n.parents:
+            g.addEdge(parent,n)
+        for child in n.children:
+            g.addEdge(n,child)
+    bn = np.array(g.topologicalSort(nodesList))
+    newbn = bn[::-1]
+    return newbn

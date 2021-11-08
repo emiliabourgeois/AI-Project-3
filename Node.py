@@ -5,11 +5,12 @@ class Node:
         self.type = type
         self.num = num
         self.states = states
+        self.state = None
         self.children = []
         self.parents = []
         self.distribution = None
         self.marginal = None
-        self.value = None
+        self.value = 0
 
     def addChild(self, child):
         self.children.append(child)
@@ -37,6 +38,8 @@ class Node:
         blanket = removeDupes(blanket)
         return blanket
 
+    def updateState(self,v):
+        self.state = self.states[int(float(v)*len(self.states))]
 
 def removeDupes(array):
     runningList = []
