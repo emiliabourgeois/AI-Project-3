@@ -9,13 +9,10 @@ class Graph:
         self.graph[u].append(v)
 
     def topologicalSortUtil(self, v, visited, stack):
-
         visited.append(v)
-
         for i in self.graph[v]:
             if i not in visited:
                 self.topologicalSortUtil(i, visited, stack)
-
         stack.append(v)
 
     def topologicalSort(self, bn):

@@ -11,6 +11,7 @@ class Node:
         self.distribution = None
         self.marginal = None
         self.value = 0
+        self.hidden = False
 
     def addChild(self, child):
         self.children.append(child)

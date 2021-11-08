@@ -3,6 +3,7 @@ import re
 import BIFparser
 import GibbsSampling
 import Node
+import VariableElim
 
 childlittle = [["lowerBodyO2","<5"],
         ["RUQO2","12+"],
@@ -59,35 +60,63 @@ def main():
         evidence = [[[], AlarmLittle, AlarmModerate], [[], childlittle, childmoderate], [[], HailfinderLittle, HailfinderModerate], [[], InsuranceLittle, InsuranceModerate], [[], winb, winc, wind, wine, winf, wing]]
         X = None
         evi = True
-        for f in range(len(filenames)):
-                bn = BIFparser.parseBIF(filenames[f])
-                for q in evidence[f]:
-                        for r in reports[f]:
-                                for n in bn:
-                                        if n.name.casefold() in r.casefold():
-                                                X = n
-                                for n in bn:
-                                        n.value = 0
-                                dist, decisions, ev = (GibbsSampling.GB(X, bn, q))
-                                if evi:
-                                        if len(ev) > 0:
-                                                print("---------")
-                                                print("Evidence")
-                                                print("--------")
-                                                for e in ev:
-                                                        print(e[0] + ": " + e[1])
-                                        else:
-                                                print("-------------")
-                                                print("Evidence: N/A")
-                                        evi = False
-                                print("-------------------")
-                                print("Report: " + X.name)
-                                print("-------------------")
-                                c = 0
-                                for s in X.states:
-                                        print(s + " " + str("{0:0.4f}".format(dist[c])))
-                                        c += 1
-                        evi = True
+        # for f in range(len(filenames)):
+        #         bn = BIFparser.parseBIF(filenames[f])
+        #         for q in evidence[f]:
+        #                 for r in reports[f]:
+        #                         for n in bn:
+        #                                 if n.name.casefold() in r.casefold():
+        #                                         X = n
+        #                         for n in bn:
+        #                                 n.value = 0
+        #                         dist, decisions, ev = (GibbsSampling.GB(X, bn, q))
+        #                         if evi:
+        #                                 if len(ev) > 0:
+        #                                         print("---------")
+        #                                         print("Evidence")
+        #                                         print("--------")
+        #                                         for e in ev:
+        #                                                 print(e[0] + ": " + e[1])
+        #                                 else:
+        #                                         print("-------------")
+        #                                         print("Evidence: N/A")
+        #                                 evi = False
+        #                         print("-------------------")
+        #                         print("Report: " + X.name)
+        #                         print("-------------------")
+        #                         c = 0
+        #                         for s in X.states:
+        #                                 print(s + " " + str("{0:0.4f}".format(dist[c])))
+        #                                 c += 1
+        #                 evi = True
+        bn = BIFparser.parseBIF(filenames[2])
+        for q in evidence[2]:
+                for r in reports[2]:
+                        for n in bn:
+                                if n.name.casefold() in r.casefold():
+                                        X = n
+                        for n in bn:
+                                n.value = 0
+                        dist, decisions, ev = (VariableElim.enumerationAsk(X, bn, q))
+                        if evi:
+                                if len(ev) > 0:
+                                        print("---------")
+                                        print("Evidence")
+                                        print("--------")
+                                        for e in ev:
+                                                print(e[0] + ": " + e[1])
+                                else:
+                                        print("-------------")
+                                        print("Evidence: N/A")
+                                evi = False
+                        print("-------------------")
+                        print("Report: " + X.name)
+                        print("-------------------")
+                        c = 0
+                        for s in X.states:
+                                print(s + " " + str("{0:0.4f}".format(dist[c])))
+                                c += 1
+                evi = True
 
 
 
