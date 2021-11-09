@@ -110,9 +110,9 @@ def parseBIF(file):  # parses a BIF file, returning a graph of Nodes
     g = Graph(len(nodesList))
     for n in nodesList:
         for parent in n.parents:
-            g.addEdge(parent, n)
+            g.e(parent, n)
         for child in n.children:
-            g.addEdge(n, child)
-    bn = np.array(g.topologicalSort(nodesList))
+            g.e(n, child)
+    bn = np.array(g.topSrt(nodesList))
     newbn = bn[::-1]
     return newbn

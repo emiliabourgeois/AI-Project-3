@@ -1,25 +1,31 @@
 from collections import defaultdict
 
 class Graph:
-    def __init__(self, vertices):
-        self.graph = defaultdict(list)
-        self.V = vertices
+    def __init__(self, verts):
+        self.V = verts
+        self.g = defaultdict(list)
 
-    def addEdge(self, u, v):
-        self.graph[u].append(v)
+    def topSrt2(self, v, vs, s):
+        vs.append(v)
+        #append new v to visited
+        for i in self.g[v]:
+        # for all edges of vertex
+            if i not in vs:
+                # recursive call if not visited
+                self.topSrt2(i, vs, s)
+        s.append(v)
 
-    def topologicalSortUtil(self, v, visited, stack):
-        visited.append(v)
-        for i in self.graph[v]:
-            if i not in visited:
-                self.topologicalSortUtil(i, visited, stack)
-        stack.append(v)
-
-    def topologicalSort(self, bn):
-
-        visited = []
-        stack = []
+    def topSrt(self, bn):
+        #visited vs
+        vs = []
+        #stack for sorting
+        s = []
+        #loop on each node then if not visited run topSrt2
         for i in bn:
-            if i not in visited:
-                self.topologicalSortUtil(i, visited, stack)
-        return stack
+            if i not in vs:
+                self.topSrt2(i, vs, s)
+        return s
+
+    def e(self, u, v):
+        #add an edge from parent to child
+        self.g[u].append(v)

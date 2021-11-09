@@ -6,6 +6,7 @@ import numpy as np
 import random
 from fractions import Fraction
 
+#normalize distributions
 def Normalize(a):
     s = float(sum(a))
     if s == 0:
@@ -13,6 +14,7 @@ def Normalize(a):
     f = 1 / s
     return [f * p for p in a]
 
+#find conditional probability given node
 def prob(n):
     s = ""
     if len(n.parents) != 0:
@@ -43,14 +45,13 @@ def prob(n):
             return(float(x[0]))
 
 
-
-
+#generates random states for all non evidence variables
 def FillRandoms(Z):
     for i in Z:
         i.value = random.uniform(0.0, 1.0)
         i.updateState(i.value)
 
-
+#finds probabilities and generates a new normalized distribution to be sampled from
 def Sample(i):
     D = [0 for j in range(len(i.states))]
     x = 0
@@ -61,26 +62,24 @@ def Sample(i):
         for c in i.children:
             t *= float(prob(c))
         D[x] = t
-        x+=1
+        x += 1
     D = Normalize(D)
     return np.random.choice(i.states, p = D)
 
 # X is query node, e is evidence, bn is the network, T is the amount of times Gibbs sampling will be repeated
 def GB(X, bn, evidence):
+    #find evidence nodes
     for n in bn:
         for e in evidence:
             if e[0].casefold() == n.name.casefold():
                 for c in n.states:
                     if e[1].casefold() == c.casefold():
                         n.state = e[1]
-                        #print(n.state)
                         n.value = 1
-                        #print(n.name + " " + n.state)
-    T = 1000
+    T = 1000 #runs 1000 times
     decisions = 0
     N = [0 for k in range(len(X.states))] # counts for each value of X
     Z = [] # nonevidence variables
-    count = 0
     for n in bn:
         if n.value != 1:
             Z.append(n)
@@ -95,6 +94,5 @@ def GB(X, bn, evidence):
                 if X.state.casefold() == s.casefold():
                     N[count] += 1
                 count += 1
-            count = 0
     decisions += 1
     return Normalize(N), decisions, evidence
