@@ -1,5 +1,6 @@
 class Node:
 
+    # Node class holds all the information about the events
     def __init__(self, name, type, num, states):
         self.name = name
         self.type = type
@@ -30,6 +31,7 @@ class Node:
         if self.isRoot():
             self.marginal = dist
 
+    # returns an array of the node's children, parents, and children's parents
     def getMarkovBlanket(self):
         blanket = []
         blanket += self.children
@@ -39,9 +41,12 @@ class Node:
         blanket = removeDupes(blanket)
         return blanket
 
-    def updateState(self,v):
-        self.state = self.states[int(float(v)*len(self.states))]
+    # updates the current state of a Node
+    def updateState(self, v):
+        self.state = self.states[int(float(v) * len(self.states))]
 
+
+# remove duplicate nodes from an array
 def removeDupes(array):
     runningList = []
     for i in array:
